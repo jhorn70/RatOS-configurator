@@ -12,6 +12,12 @@ install_dependencies()
     report_status "Installing RatOS dependencies"
     # shellcheck disable=SC2086
     $SUDO apt-get update && $SUDO apt-get install -y $PKGLIST
+
+    # If we're installing the OpenBLAS OpenMP provider, mark it manual
+    # so APT won't auto-swap it for the pthread variant.
+    if echo "$PKGLIST" | grep -qw libopenblas0-openmp; then
+        $SUDO apt-mark manual libopenblas0-openmp || true
+    fi
 }
 
 install_printer_config()
